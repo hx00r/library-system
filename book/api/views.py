@@ -18,7 +18,7 @@ class BooksViews(APIView):
         title = request.query_params.get('title', None)
         if title: # filter by query param
             with connection.cursor() as cursor:
-                cursor.execute(f'SELECT * FROM book WHERE title="{title}"')
+                cursor.execute(f'SELECT * FROM book WHERE title= %s', (title,))
                 row = cursor.fetchone()
                 converted_result = self.convert_row(cursor=cursor, row=row)
                 return Response(BookSerializer(converted_result).data, status=status.HTTP_200_OK)
